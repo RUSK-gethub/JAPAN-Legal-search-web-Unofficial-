@@ -7,37 +7,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  /* ── Reset & Base ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg:        #080c14;
-    --surface:   #0d1422;
-    --glass:     rgba(13,20,34,0.72);
-    --border:    rgba(99,179,237,0.12);
-    --border-h:  rgba(99,179,237,0.35);
-    --accent:    #63b3ed;
-    --accent2:   #4fd1c7;
-    --text:      #e2e8f0;
-    --muted:     #718096;
-    --danger:    #fc8181;
-    --card-bg:   rgba(15,23,42,0.85);
-    --r:         12px;
-    --font-jp:   'Noto Sans JP', sans-serif;
-    --font-en:   'Space Grotesk', sans-serif;
+    --bg:       #080c14;
+    --glass:    rgba(13,20,34,0.72);
+    --border:   rgba(99,179,237,0.12);
+    --border-h: rgba(99,179,237,0.35);
+    --accent:   #63b3ed;
+    --accent2:  #4fd1c7;
+    --text:     #e2e8f0;
+    --muted:    #718096;
+    --danger:   #fc8181;
+    --card-bg:  rgba(15,23,42,0.85);
+    --r:        12px;
+    --jp:       'Noto Sans JP', sans-serif;
+    --en:       'Space Grotesk', sans-serif;
   }
-
   html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--jp); min-height: 100vh; overflow-x: hidden; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-jp);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ── Animated Background ── */
   .bg-layer {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
@@ -45,7 +33,6 @@
       radial-gradient(ellipse 60% 80% at 80% 80%, rgba(79,209,199,0.05) 0%, transparent 60%),
       var(--bg);
   }
-
   .grid-lines {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background-image:
@@ -54,468 +41,121 @@
     background-size: 48px 48px;
     animation: gridDrift 40s linear infinite;
   }
+  @keyframes gridDrift { from { background-position:0 0; } to { background-position:48px 48px; } }
 
-  @keyframes gridDrift {
-    from { background-position: 0 0; }
-    to   { background-position: 48px 48px; }
-  }
+  .wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
 
-  /* ── Layout ── */
-  .container {
-    position: relative; z-index: 1;
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 20px 80px;
-  }
-
-  /* ── Header ── */
   header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 28px 0 0;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 24px;
-    margin-bottom: 56px;
+    padding: 28px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 56px;
   }
-
-  .logo {
-    font-family: var(--font-en);
-    font-weight: 600;
-    font-size: 1.4rem;
-    letter-spacing: -0.02em;
-    color: var(--text);
-  }
-
+  .logo { font-family: var(--en); font-weight: 600; font-size: 1.4rem; letter-spacing: -0.02em; }
   .logo span { color: var(--accent); }
-
   .badge {
-    font-size: 0.65rem;
-    font-family: var(--font-en);
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid var(--border-h);
-    border-radius: 4px;
-    padding: 3px 8px;
+    font-size: 0.65rem; font-family: var(--en); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--border-h); border-radius: 4px; padding: 3px 8px;
   }
 
-  /* ── Hero ── */
-  .hero {
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
+  .hero { text-align: center; margin-bottom: 48px; }
   .hero-title {
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 300;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
+    font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 300; line-height: 1.2;
+    letter-spacing: -0.02em; margin-bottom: 12px;
     background: linear-gradient(135deg, var(--text) 40%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     animation: fadeUp 0.7s ease both;
   }
+  .hero-sub { color: var(--muted); font-size: 0.875rem; font-weight: 300; letter-spacing: 0.04em; animation: fadeUp 0.7s 0.1s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 
-  .hero-sub {
-    color: var(--muted);
-    font-size: 0.875rem;
-    font-weight: 300;
-    letter-spacing: 0.04em;
-    animation: fadeUp 0.7s 0.1s ease both;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── Search Box ── */
-  .search-wrap {
-    position: relative;
-    animation: fadeUp 0.7s 0.2s ease both;
-    margin-bottom: 32px;
-  }
-
-  .search-row {
-    display: flex;
-    gap: 10px;
-    align-items: stretch;
-  }
-
+  .search-wrap { animation: fadeUp 0.7s 0.2s ease both; margin-bottom: 20px; }
+  .search-row { display: flex; gap: 10px; }
   .search-input {
-    flex: 1;
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 16px 20px;
-    font-size: 1rem;
-    font-family: var(--font-jp);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.25s, box-shadow 0.25s;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    flex: 1; background: var(--glass); border: 1px solid var(--border); border-radius: var(--r);
+    padding: 16px 20px; font-size: 1rem; font-family: var(--jp); color: var(--text); outline: none;
+    transition: border-color .25s, box-shadow .25s;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
-
   .search-input::placeholder { color: var(--muted); }
-
-  .search-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(99,179,237,0.12), 0 0 20px rgba(99,179,237,0.08);
-  }
-
+  .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,179,237,.12), 0 0 20px rgba(99,179,237,.08); }
   .search-btn {
-    background: var(--accent);
-    color: #080c14;
-    border: none;
-    border-radius: var(--r);
-    padding: 0 28px;
-    font-size: 0.875rem;
-    font-family: var(--font-jp);
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    white-space: nowrap;
-    letter-spacing: 0.03em;
+    background: var(--accent); color: #080c14; border: none; border-radius: var(--r);
+    padding: 0 28px; font-size: .875rem; font-family: var(--jp); font-weight: 700;
+    cursor: pointer; transition: background .2s, transform .15s; white-space: nowrap;
   }
-
   .search-btn:hover { background: #90cdf4; transform: translateY(-1px); }
   .search-btn:active { transform: translateY(0); }
 
-  /* ── Suggestions ── */
-  .suggest-pills {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    animation: fadeUp 0.7s 0.3s ease both;
-    margin-bottom: 4px;
-  }
-
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; animation: fadeUp 0.7s 0.3s ease both; margin-bottom: 4px; }
   .pill {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 50px;
-    padding: 5px 14px;
-    font-size: 0.75rem;
-    color: var(--muted);
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    background: var(--glass); border: 1px solid var(--border); border-radius: 50px;
+    padding: 5px 14px; font-size: .75rem; color: var(--muted);
+    cursor: pointer; transition: border-color .2s, color .2s, background .2s;
     backdrop-filter: blur(8px);
   }
+  .pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(99,179,237,.08); }
 
-  .pill:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(99,179,237,0.08);
+  .status-bar { display: flex; align-items: center; gap: 10px; min-height: 36px; margin: 20px 0; font-size: .8rem; color: var(--muted); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .dot.loading { animation: blink .8s ease-in-out infinite alternate; }
+  .dot.error   { background: var(--danger); }
+  .dot.ready   { background: var(--accent2); }
+  @keyframes blink { from { opacity:.3; transform:scale(.85); } to { opacity:1; transform:scale(1.15); } }
+
+  .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
   }
-
-  /* ── Status Bar ── */
-  .status-bar {
-    display: flex; align-items: center; gap: 10px;
-    min-height: 32px;
-    margin-bottom: 20px;
-    font-size: 0.8rem;
-    color: var(--muted);
-    animation: fadeUp 0.5s ease both;
-  }
-
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
-
-  .status-dot.loading {
-    animation: pulse 0.8s ease-in-out infinite alternate;
-  }
-
-  .status-dot.error { background: var(--danger); }
-
-  @keyframes pulse {
-    from { opacity: 0.3; transform: scale(0.85); }
-    to   { opacity: 1;   transform: scale(1.15); }
-  }
-
-  /* ── Results ── */
-  .results { display: flex; flex-direction: column; gap: 12px; }
 
   .result-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 20px 24px;
-    cursor: pointer;
-    transition: border-color 0.22s, background 0.22s, transform 0.18s;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    animation: cardIn 0.35s ease both;
-    position: relative;
-    overflow: hidden;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r);
+    padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between;
+    transition: border-color .22s, background .22s, transform .18s, box-shadow .22s;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    animation: cardIn .35s ease both; opacity: 0; transform: translateY(10px);
+    position: relative; overflow: hidden;
   }
-
   .result-card::before {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 3px;
-    background: transparent;
-    transition: background 0.22s;
-    border-radius: var(--r) 0 0 var(--r);
+    content: ''; position: absolute; inset: 0 auto 0 0; width: 3px;
+    background: transparent; transition: background .22s;
   }
-
-  .result-card:hover {
-    border-color: var(--border-h);
-    background: rgba(15,23,42,0.95);
-    transform: translateX(3px);
-  }
-
+  .result-card:hover { border-color: var(--border-h); background: rgba(15,23,42,.98); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.45); }
   .result-card:hover::before { background: var(--accent); }
+  @keyframes cardIn { to { opacity:1; transform:translateY(0); } }
 
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .law-name { font-size: .95rem; font-weight: 500; line-height: 1.4; margin-bottom: 8px; }
+  .law-name mark { background: rgba(99,179,237,.22); color: var(--accent); border-radius: 2px; padding: 0 2px; }
+  .law-meta { font-size: .7rem; color: var(--muted); font-family: var(--en); margin-bottom: 14px; line-height: 1.7; }
+
+  .action-link {
+    display: flex; align-items: center; justify-content: center; padding: 8px;
+    background: rgba(99,179,237,.06); color: var(--accent); text-decoration: none;
+    border-radius: 6px; font-size: .8rem; font-weight: 600;
+    transition: background .2s, color .2s; border: 1px solid var(--border);
   }
+  .result-card:hover .action-link { background: var(--accent); color: #080c14; border-color: var(--accent); }
 
-  .card-header {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 12px; margin-bottom: 8px;
+  .skel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .skel {
+    background: linear-gradient(90deg, rgba(99,179,237,.04) 25%, rgba(99,179,237,.10) 50%, rgba(99,179,237,.04) 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 5px;
   }
+  @keyframes shimmer { from { background-position:200% 0; } to { background-position:-200% 0; } }
 
-  .law-name {
-    font-size: 0.975rem;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.4;
-  }
+  .empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); animation: fadeUp .4s ease; }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 16px; opacity: .4; }
 
-  .law-no {
-    font-size: 0.7rem;
-    font-family: var(--font-en);
-    color: var(--accent);
-    background: rgba(99,179,237,0.1);
-    border: 1px solid rgba(99,179,237,0.2);
-    border-radius: 4px;
-    padding: 2px 7px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    align-self: flex-start;
-    margin-top: 2px;
-  }
-
-  .law-meta {
-    display: flex; gap: 16px;
-    font-size: 0.72rem;
-    color: var(--muted);
-  }
-
-  .law-meta span { display: flex; align-items: center; gap: 4px; }
-
-  .icon {
-    width: 12px; height: 12px;
-    opacity: 0.6;
-    vertical-align: middle;
-  }
-
-  /* ── Detail Modal ── */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 100;
-    background: rgba(8,12,20,0.88);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    display: flex; align-items: flex-start; justify-content: center;
-    padding: 40px 20px;
-    animation: overlayIn 0.2s ease;
-    overflow-y: auto;
-  }
-
-  @keyframes overlayIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
-  .modal-overlay.hidden { display: none; }
-
-  .modal {
-    background: #0d1422;
-    border: 1px solid var(--border-h);
-    border-radius: 16px;
-    width: 100%; max-width: 780px;
-    padding: 36px 40px;
-    position: relative;
-    animation: modalIn 0.25s ease;
-    flex-shrink: 0;
-  }
-
-  @keyframes modalIn {
-    from { opacity: 0; transform: translateY(24px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .modal-close {
-    position: absolute; top: 20px; right: 20px;
-    background: rgba(99,179,237,0.08);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    width: 34px; height: 34px;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: color 0.2s, border-color 0.2s;
-  }
-
-  .modal-close:hover { color: var(--text); border-color: var(--border-h); }
-
-  .modal-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    margin-bottom: 6px;
-    padding-right: 48px;
-    line-height: 1.4;
-  }
-
-  .modal-num {
-    font-size: 0.78rem;
-    font-family: var(--font-en);
-    color: var(--accent);
-    margin-bottom: 20px;
-  }
-
-  .modal-meta-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
-    padding: 18px;
-    background: rgba(99,179,237,0.04);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-  }
-
-  .meta-item label {
-    display: block;
-    font-size: 0.65rem;
-    font-family: var(--font-en);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 3px;
-  }
-
-  .meta-item span {
-    font-size: 0.82rem;
-    color: var(--text);
-  }
-
-  .modal-actions {
-    display: flex; gap: 10px; flex-wrap: wrap;
-  }
-
-  .btn-outline {
-    display: inline-flex; align-items: center; gap: 6px;
-    border: 1px solid var(--border-h);
-    background: transparent;
-    color: var(--accent);
-    border-radius: 8px;
-    padding: 9px 18px;
-    font-size: 0.82rem;
-    font-family: var(--font-jp);
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s, border-color 0.2s;
-  }
-
-  .btn-outline:hover {
-    background: rgba(99,179,237,0.08);
-    border-color: var(--accent);
-  }
-
-  .btn-solid {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--accent);
-    color: #080c14;
-    border: none;
-    border-radius: 8px;
-    padding: 9px 20px;
-    font-size: 0.82rem;
-    font-family: var(--font-jp);
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s;
-  }
-
-  .btn-solid:hover { background: #90cdf4; }
-
-  /* ── Loading Skeleton ── */
-  .skeleton {
-    background: linear-gradient(90deg,
-      rgba(99,179,237,0.04) 25%,
-      rgba(99,179,237,0.10) 50%,
-      rgba(99,179,237,0.04) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 6px;
-    height: 14px;
-  }
-
-  @keyframes shimmer {
-    from { background-position: 200% 0; }
-    to   { background-position: -200% 0; }
-  }
-
-  .skeleton-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 20px 24px;
-    display: flex; flex-direction: column; gap: 10px;
-  }
-
-  /* ── Empty State ── */
-  .empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--muted);
-    animation: fadeUp 0.4s ease;
-  }
-
-  .empty-icon {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
-    opacity: 0.4;
-  }
-
-  /* ── Footer ── */
-  footer {
-    position: relative; z-index: 1;
-    text-align: center;
-    padding: 32px 0;
-    color: var(--muted);
-    font-size: 0.72rem;
-    border-top: 1px solid var(--border);
-    line-height: 1.8;
-  }
-
+  footer { position: relative; z-index: 1; text-align: center; padding: 32px 0; color: var(--muted); font-size: .72rem; border-top: 1px solid var(--border); margin-top: 40px; line-height: 1.8; }
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
-  /* ── Scrollbar ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border-h); border-radius: 3px; }
 
-  /* ── Responsive ── */
-  @media (max-width: 540px) {
-    .modal { padding: 28px 22px; }
-    .search-btn { padding: 0 18px; font-size: 0.82rem; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-  }
+  @media (max-width: 540px) { .results { grid-template-columns: 1fr; } .search-btn { padding: 0 16px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 </style>
 </head>
 <body>
@@ -523,7 +163,7 @@
 <div class="bg-layer"></div>
 <div class="grid-lines"></div>
 
-<div class="container">
+<div class="wrap">
   <header>
     <div class="logo">Lex<span>Search</span></div>
     <div class="badge">e-Gov API</div>
@@ -531,286 +171,179 @@
 
   <section class="hero">
     <h1 class="hero-title">日本の法令を<br>すぐ探す</h1>
-    <p class="hero-sub">e-Gov 法令検索 API — 全法令データベースに即アクセス</p>
+    <p class="hero-sub">e-Gov 法令検索 — 全法令データベースをローカルフィルタリングで高速検索</p>
   </section>
 
   <div class="search-wrap">
     <div class="search-row">
-      <input
-        id="searchInput"
-        class="search-input"
-        type="search"
-        placeholder="法令名・キーワードを入力　例: 労働基準法"
-        autocomplete="off"
-        spellcheck="false"
-      >
-      <button class="search-btn" id="searchBtn" onclick="doSearch()">検索</button>
+      <input id="searchInput" class="search-input" type="search"
+        placeholder="法令名を入力　例: 労働基準法、著作権"
+        autocomplete="off" spellcheck="false">
+      <button class="search-btn" id="searchBtn">検索</button>
     </div>
   </div>
 
-  <div class="suggest-pills" id="suggestPills">
+  <div class="pills">
     <span class="pill" onclick="quickSearch('労働基準法')">労働基準法</span>
     <span class="pill" onclick="quickSearch('民法')">民法</span>
     <span class="pill" onclick="quickSearch('刑法')">刑法</span>
     <span class="pill" onclick="quickSearch('会社法')">会社法</span>
-    <span class="pill" onclick="quickSearch('著作権法')">著作権法</span>
-    <span class="pill" onclick="quickSearch('個人情報保護法')">個人情報保護法</span>
+    <span class="pill" onclick="quickSearch('著作権')">著作権法</span>
+    <span class="pill" onclick="quickSearch('個人情報')">個人情報保護法</span>
     <span class="pill" onclick="quickSearch('憲法')">日本国憲法</span>
-    <span class="pill" onclick="quickSearch('道路交通法')">道路交通法</span>
+    <span class="pill" onclick="quickSearch('道路交通')">道路交通法</span>
   </div>
 
-  <div class="status-bar" id="statusBar" style="opacity:0"></div>
+  <div class="status-bar">
+    <span class="dot loading" id="dot"></span>
+    <span id="statusText">法令データベースを読み込み中…</span>
+  </div>
 
   <div class="results" id="results"></div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <button class="modal-close" onclick="closeModalBtn()">✕</button>
-    <h2 class="modal-title" id="modalTitle"></h2>
-    <div class="modal-num" id="modalNum"></div>
-    <div class="modal-meta-grid" id="modalMeta"></div>
-    <div class="modal-actions" id="modalActions"></div>
-  </div>
-</div>
-
 <footer>
-  <div class="container" style="padding-bottom:0">
+  <div style="max-width:960px;margin:0 auto;padding:0 20px">
     データ提供: <a href="https://laws.e-gov.go.jp" target="_blank" rel="noopener">e-Gov 法令検索</a>（デジタル庁）<br>
-    法令情報は参考情報です。正確な情報は必ず e-Gov 公式サイトでご確認ください。
+    本サイトは参考情報です。正確な法令情報は必ず公式サイトでご確認ください。
   </div>
 </footer>
 
 <script>
-// ─────────────────────────────────────────
-//  e-Gov API  (CORS Proxy 経由)
-//  e-Gov API v2: https://laws.e-gov.go.jp/api/2/
-//  CORSをブラウザから回避するため、allorigins.win (無償プロキシ) を使用
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  e-Gov 法令一覧 API v1 — 全件キャッシュ + ローカル検索
+//  API: https://elaws.e-gov.go.jp/api/1/lawlists/1
+//  同エンドポイントはCORSヘッダーを返すのでプロキシ不要
+// ─────────────────────────────────────────────────────
 
-const E_GOV_BASE = 'https://laws.e-gov.go.jp/api/2';
-const PROXY = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+const API_URL     = 'https://elaws.e-gov.go.jp/api/1/lawlists/1';
+const LAW_URL     = id => `https://laws.e-gov.go.jp/law/${encodeURIComponent(id)}`;
+const DISPLAY_MAX = 120;
 
-let currentResults = [];
+let cache = null;
 
-// ── DOM helpers ──────────────────────────
-const $  = id => document.getElementById(id);
-const el = (tag, cls, html) => {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (html !== undefined) e.innerHTML = html;
-  return e;
+const dom = {
+  input:  document.getElementById('searchInput'),
+  btn:    document.getElementById('searchBtn'),
+  dot:    document.getElementById('dot'),
+  text:   document.getElementById('statusText'),
+  results:document.getElementById('results'),
 };
 
+// ── Status ─────────────────────────────────
 function setStatus(msg, state = 'idle') {
-  const bar = $('statusBar');
-  bar.style.opacity = '1';
-  const dotCls = state === 'loading' ? 'status-dot loading'
-                : state === 'error'  ? 'status-dot error'
-                : 'status-dot';
-  bar.innerHTML = `<span class="${dotCls}"></span><span>${msg}</span>`;
+  dom.text.textContent = msg;
+  dom.dot.className = 'dot' + (state !== 'idle' ? ' ' + state : '');
 }
 
-function clearResults() {
-  $('results').innerHTML = '';
-}
-
-// ── Skeleton Loaders ──────────────────────
-function showSkeletons(n = 4) {
-  const r = $('results');
-  r.innerHTML = '';
+// ── Skeletons ──────────────────────────────
+function showSkeletons(n = 6) {
+  dom.results.innerHTML = '';
   for (let i = 0; i < n; i++) {
-    const c = el('div', 'skeleton-card');
+    const c = document.createElement('div');
+    c.className = 'skel-card';
     c.innerHTML = `
-      <div class="skeleton" style="width:60%;height:15px"></div>
-      <div class="skeleton" style="width:40%;height:11px"></div>
+      <div class="skel" style="width:70%;height:14px"></div>
+      <div class="skel" style="width:45%;height:11px"></div>
+      <div class="skel" style="width:55%;height:11px"></div>
+      <div class="skel" style="width:100%;height:30px;margin-top:4px"></div>
     `;
-    c.style.animationDelay = `${i * 0.07}s`;
-    r.appendChild(c);
+    dom.results.appendChild(c);
   }
 }
 
-// ── Fetch wrapper (allorigins proxy) ──────
-async function fetchProxy(url) {
-  const res = await fetch(PROXY(url));
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  return data.contents;          // allorigins returns { contents: "..." }
-}
-
-// ── Search ────────────────────────────────
-async function doSearch() {
-  const q = $('searchInput').value.trim();
-  if (!q) { $('searchInput').focus(); return; }
-
-  clearResults();
-  showSkeletons(5);
-  setStatus('検索中…', 'loading');
-
+// ── Fetch & parse full law list ────────────
+async function loadLaws() {
+  if (cache) return cache;
+  showSkeletons(6);
+  setStatus('e-Gov データベースと同期中…', 'loading');
   try {
-    // e-Gov v2: /laws?keyword=<q>&category=0  (category=0:すべて)
-    const apiUrl = `${E_GOV_BASE}/laws?keyword=${encodeURIComponent(q)}&category=0`;
-    const xml = await fetchProxy(apiUrl);
-
-    const parser = new DOMParser();
-    const doc    = parser.parseFromString(xml, 'application/xml');
-
-    const items = doc.querySelectorAll('Law');
-    currentResults = [];
-
-    items.forEach(item => {
-      const get = tag => item.querySelector(tag)?.textContent?.trim() ?? '';
-      currentResults.push({
-        lawId:      get('LawId'),
-        lawNum:     get('LawNum'),
-        lawName:    get('LawName'),
-        promulgateDate: get('PromulgateDate'),
-        category:   get('Category'),
-        revised:    get('Revised'),
-        enforcementDate: get('EnforcementDate'),
-      });
-    });
-
-    clearResults();
-
-    if (currentResults.length === 0) {
-      showEmpty(`「${q}」に一致する法令が見つかりませんでした。`);
-      setStatus('検索結果 0 件', 'idle');
-      return;
-    }
-
-    setStatus(`${currentResults.length} 件の法令が見つかりました`, 'idle');
-    renderResults(currentResults);
-
+    const res  = await fetch(API_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const xml  = new DOMParser().parseFromString(await res.text(), 'text/xml');
+    const nodes = xml.getElementsByTagName('LawNameListInfo');
+    cache = Array.from(nodes).map(n => ({
+      name: n.getElementsByTagName('LawName')[0]?.textContent?.trim() ?? '',
+      no:   n.getElementsByTagName('LawNo')[0]?.textContent?.trim()   ?? '',
+      id:   n.getElementsByTagName('LawId')[0]?.textContent?.trim()   ?? '',
+    })).filter(l => l.name);
+    dom.results.innerHTML = '';
+    setStatus(`同期完了 — ${cache.length.toLocaleString()} 件をインデックス済み　検索してください`, 'ready');
+    return cache;
   } catch (e) {
     console.error(e);
-    clearResults();
-    showEmpty('データの取得に失敗しました。しばらくしてから再試行してください。', true);
-    setStatus('エラーが発生しました', 'error');
+    dom.results.innerHTML = '';
+    setStatus('データ取得に失敗しました。ページを再読み込みしてください。', 'error');
+    return [];
   }
 }
 
-// ── Render Cards ──────────────────────────
-function renderResults(list) {
-  const r = $('results');
-  list.forEach((law, i) => {
-    const card = el('div', 'result-card');
-    card.style.animationDelay = `${i * 0.04}s`;
-    card.innerHTML = `
-      <div class="card-header">
-        <div class="law-name">${esc(law.lawName || '（名称不明）')}</div>
-        ${law.lawNum ? `<div class="law-no">${esc(law.lawNum)}</div>` : ''}
-      </div>
-      <div class="law-meta">
-        ${law.promulgateDate ? `<span>📅 公布: ${esc(law.promulgateDate)}</span>` : ''}
-        ${law.category       ? `<span>📂 ${categoryLabel(law.category)}</span>` : ''}
-        ${law.revised === '1' ? `<span style="color:var(--accent2)">✓ 改正済</span>` : ''}
-      </div>
-    `;
-    card.addEventListener('click', () => openModal(law));
-    r.appendChild(card);
-  });
-}
-
-// ── Category Labels ───────────────────────
-function categoryLabel(c) {
-  const m = {
-    '1':'憲法','2':'法律','3':'政令','4':'勅令','5':'府省令','6':'規則',
-    '7':'告示','8':'条約','9':'国会規則','10':'国際規則','99':'その他'
-  };
-  return m[c] ?? `カテゴリ ${c}`;
-}
-
-// ── Empty State ───────────────────────────
-function showEmpty(msg, isError = false) {
-  const r = $('results');
-  r.innerHTML = `
-    <div class="empty">
-      <div class="empty-icon">${isError ? '⚠️' : '🔍'}</div>
-      <p>${esc(msg)}</p>
-    </div>`;
-}
-
-// ── Modal ────────────────────────────────
-function openModal(law) {
-  $('modalTitle').textContent = law.lawName || '（名称不明）';
-  $('modalNum').textContent   = law.lawNum  || '';
-
-  const meta = $('modalMeta');
-  meta.innerHTML = '';
-  const rows = [
-    ['LAW ID',        law.lawId],
-    ['法令番号',       law.lawNum],
-    ['公布日',         law.promulgateDate],
-    ['施行日',         law.enforcementDate],
-    ['カテゴリ',       categoryLabel(law.category)],
-    ['改正',           law.revised === '1' ? '改正済' : '—'],
-  ];
-  rows.forEach(([label, val]) => {
-    if (!val) return;
-    const div = el('div', 'meta-item');
-    div.innerHTML = `<label>${label}</label><span>${esc(val)}</span>`;
-    meta.appendChild(div);
-  });
-
-  const actions = $('modalActions');
-  actions.innerHTML = '';
-
-  if (law.lawId) {
-    const viewUrl = `https://laws.e-gov.go.jp/law/${encodeURIComponent(law.lawId)}`;
-    const a = el('a', 'btn-solid');
-    a.href = viewUrl; a.target = '_blank'; a.rel = 'noopener';
-    a.innerHTML = '📄 e-Gov で条文を見る';
-    actions.appendChild(a);
-
-    const copy = el('button', 'btn-outline');
-    copy.innerHTML = '🔗 URLをコピー';
-    copy.onclick = () => {
-      navigator.clipboard?.writeText(viewUrl).then(() => {
-        copy.innerHTML = '✓ コピーしました';
-        setTimeout(() => { copy.innerHTML = '🔗 URLをコピー'; }, 2000);
-      });
-    };
-    actions.appendChild(copy);
-  }
-
-  $('modalOverlay').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal(e) {
-  if (e.target === $('modalOverlay')) closeModalBtn();
-}
-
-function closeModalBtn() {
-  $('modalOverlay').classList.add('hidden');
-  document.body.style.overflow = '';
-}
-
-// ── Quick Search ──────────────────────────
-function quickSearch(q) {
-  $('searchInput').value = q;
-  doSearch();
-}
-
-// ── Escape HTML ───────────────────────────
+// ── Escape + highlight ─────────────────────
 function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function highlight(text, kw) {
+  if (!kw) return esc(text);
+  const re = new RegExp(`(${kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return esc(text).replace(re, '<mark>$1</mark>');
 }
 
-// ── Keyboard Shortcuts ───────────────────
+// ── Search & render ────────────────────────
+async function doSearch() {
+  const kw = dom.input.value.trim();
+  if (!kw) { setStatus('キーワードを入力してください。', 'error'); return; }
+
+  const laws = await loadLaws();
+  if (!laws.length) return;
+
+  dom.results.innerHTML = '';
+  const t0 = performance.now();
+  const matched = laws.filter(l => l.name.includes(kw));
+  const ms = (performance.now() - t0).toFixed(1);
+
+  if (!matched.length) {
+    dom.results.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>「${esc(kw)}」に一致する法令が見つかりませんでした。</p></div>`;
+    setStatus(`0 件 (${ms}ms)`, 'error');
+    return;
+  }
+
+  setStatus(`${matched.length.toLocaleString()} 件ヒット (${ms}ms)`, 'ready');
+
+  const frag = document.createDocumentFragment();
+  matched.slice(0, DISPLAY_MAX).forEach((law, i) => {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.style.animationDelay = `${i * 0.025}s`;
+    card.innerHTML = `
+      <div>
+        <div class="law-name">${highlight(law.name, kw)}</div>
+        <div class="law-meta">No: ${esc(law.no)}<br>ID: ${esc(law.id)}</div>
+      </div>
+      <a href="${LAW_URL(law.id)}" target="_blank" rel="noopener" class="action-link">📄 条文を開く</a>
+    `;
+    frag.appendChild(card);
+  });
+  dom.results.appendChild(frag);
+
+  if (matched.length > DISPLAY_MAX) {
+    const more = document.createElement('div');
+    more.style.cssText = 'grid-column:1/-1;text-align:center;color:var(--muted);padding:20px;font-size:.8rem';
+    more.textContent = `他 ${(matched.length - DISPLAY_MAX).toLocaleString()} 件 — 検索ワードを絞ってください`;
+    dom.results.appendChild(more);
+  }
+}
+
+// ── Helpers ────────────────────────────────
+function quickSearch(q) { dom.input.value = q; doSearch(); }
+
+dom.btn.addEventListener('click', doSearch);
+dom.input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModalBtn();
-  if (e.key === 'Enter' && document.activeElement === $('searchInput')) doSearch();
+  if (e.key === '/' && document.activeElement !== dom.input) { e.preventDefault(); dom.input.focus(); }
 });
 
-// ── Init ─────────────────────────────────
-window.addEventListener('load', () => {
-  $('searchInput').focus();
-});
+// ── Init ───────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => { dom.input.focus(); loadLaws(); });
 </script>
 </body>
 </html>
