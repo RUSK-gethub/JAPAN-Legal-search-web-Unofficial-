@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Gov Law Explorer</title>
+    <style>
+        /* === 1. Design Tokens (CSS変数) === */
+        :root {
+            --bg-base: #09090b;
+            --bg-surface: #18181b;
+            --bg-surface-hover: #27272a;
+            --border: #3f3f46;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --radius: 8px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* === 2. Base & Typography === */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* === 3. Header & UI Components === */
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: var(--text-main);
+        }
+        h1 span { color: var(--accent); }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        input {
+            flex-grow: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+        input::placeholder { color: var(--text-muted); }
+
+        button {
+            background: var(--text-main);
+            color: var(--bg-base);
+            border: none;
+            padding: 0 32px;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-1px);
+        }
+        button:active { transform: translateY(1px); }
+
+        /* === 4. Status & Grid Layout === */
+        .status-container {
+            min-height: 24px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .status-loading { color: var(--accent); animation: pulse 1.5s infinite; }
+        .status-error { color: #f87171; }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        /* === 5. Cards & Effects === */
+        .law-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            animation: fadeIn 0.4s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .law-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-surface-hover);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        .law-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .law-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .law-meta span { display: block; }
+        
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+        .law-card:hover .action-link {
+            background: var(--accent);
+            color: var(--bg-base);
+        }
+
+        /* ハイライト用クラス */
+        .highlight {
+            background-color: rgba(56, 189, 248, 0.2);
+            color: var(--accent);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* === 6. Animations === */
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>e-Gov <span>LawExplorer</span></h1>
+        </header>
+        
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="法令名を入力 (例: 民法, 著作権)" autocomplete="off">
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <div class="status-container" id="status">システム待機中...</div>
+        
+        <div class="results-grid" id="results"></div>
+    </div>
+
+    <script>
+        const API_URL = 'https://elaws.e-gov.go.jp/api/1/lawlists/1';
+        let lawDataCache = null;
+
+        const DOM = {
+            input: document.getElementById('searchInput'),
+            btn: document.getElementById('searchBtn'),
+            status: document.getElementById('status'),
+            results: document.getElementById('results')
+        };
+
+        // UIステータスの更新
+        const updateStatus = (msg, type = '') => {
+            DOM.status.textContent = msg;
+            DOM.status.className = `status-container ${type}`;
+        };
+
+        // データの非同期取得とパース
+        async function fetchLawData() {
+            if (lawDataCache) return lawDataCache;
+
+            updateStatus('e-Govデータベースと同期中...', 'status-loading');
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('API通信エラー');
+                
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(text, 'text/xml');
+                const laws = xmlDoc.getElementsByTagName('LawNameListInfo');
+                
+                lawDataCache = Array.from(laws).map(law => ({
+                    name: law.getElementsByTagName('LawName')[0]?.textContent || '不明',
+                    no: law.getElementsByTagName('LawNo')[0]?.textContent || '不明',
+                    id: law.getElementsByTagName('LawId')[0]?.textContent || '不明'
+                }));
+
+                updateStatus(`同期完了: ${lawDataCache.length.toLocaleString()} 件の法令をインデックス済み`);
+                return lawDataCache;
+            } catch (error) {
+                console.error(error);
+                updateStatus('データ取得に失敗。ネットワークを確認しろ。', 'status-error');
+                return [];
+            }
+        }
+
+        // キーワードハイライト処理
+        const highlightText = (text, keyword) => {
+            if (!keyword) return text;
+            const regex = new RegExp(`(${keyword})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        };
+
+        // 検索とレンダリングのコアロジック
+        async function executeSearch() {
+            const keyword = DOM.input.value.trim();
+            DOM.results.innerHTML = ''; // クリア
+            
+            if (!keyword) {
+                updateStatus('検索キーワードを入力しろ。', 'status-error');
+                return;
+            }
+
+            const laws = await fetchLawData();
+            if (laws.length === 0) return;
+
+            // 検索実行
+            const t0 = performance.now();
+            const filteredLaws = laws.filter(law => law.name.includes(keyword));
+            const t1 = performance.now();
+
+            const timeTaken = (t1 - t0).toFixed(1);
+            updateStatus(`${filteredLaws.length} 件の法令を検出 (${timeTaken}ms)`);
+
+            if (filteredLaws.length === 0) {
+                DOM.results.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px;">該当データなし。</div>`;
+                return;
+            }
+
+            // フラグメントを使って一気にDOMへ追加（レンダリングの最適化）
+            const fragment = document.createDocumentFragment();
+            
+            // パフォーマンスのため、最大100件までに制限（実用的なUI）
+            const displayLimit = 100;
+            const renderTarget = filteredLaws.slice(0, displayLimit);
+
+            renderTarget.forEach((law, index) => {
+                const card = document.createElement('div');
+                card.className = 'law-card';
+                // staggerアニメーション用の遅延設定
+                card.style.animationDelay = `${index * 0.03}s`;
+                
+                const highlightedName = highlightText(law.name, keyword);
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="law-title">${highlightedName}</div>
+                        <div class="law-meta">
+                            <span>No: ${law.no}</span>
+                            <span>ID: ${law.id}</span>
+                        </div>
+                    </div>
+                    <a href="#" class="action-link" onclick="openLaw('${law.id}'); return false;">
+                        条文を展開
+                    </a>
+                `;
+                fragment.appendChild(card);
+            });
+
+            DOM.results.appendChild(fragment);
+
+            if (filteredLaws.length > displayLimit) {
+                const moreMsg = document.createElement('div');
+                moreMsg.style.gridColumn = "1 / -1";
+                moreMsg.style.textAlign = "center";
+                moreMsg.style.color = "var(--text-muted)";
+                moreMsg.style.marginTop = "20px";
+                moreMsg.textContent = `他 ${filteredLaws.length - displayLimit} 件... 検索条件を絞り込め。`;
+                DOM.results.appendChild(moreMsg);
+            }
+        }
+
+        // 条文展開用ダミー関数（次のステップ用）
+        function openLaw(lawId) {
+            alert(`[LawID: ${lawId}]\nここから先の条文パース処理を次に構築する。`);
+        }
+
+        // イベントリスナー
+        DOM.btn.addEventListener('click', executeSearch);
+        DOM.input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') executeSearch();
+        });
+
+        // 初回ロード時にバックグラウンドでキャッシュを構築させておく
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchLawData().then(() => {
+                if(DOM.status.className !== 'status-error') {
+                    updateStatus('システム準備完了。検索を開始しろ。');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
